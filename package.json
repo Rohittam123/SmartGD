@@ -1,0 +1,19 @@
+{
+  "name": "smart-gd",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Smart GD - AI-powered Group Discussion Platform",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "functions": "cd functions && npm run serve",
+    "build": "cd frontend && npm run build",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:rules": "firebase deploy --only firestore:rules,storage"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
