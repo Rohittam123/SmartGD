@@ -9,6 +9,7 @@ import Login from "../pages/auth/Login.jsx";
 import Register from "../pages/auth/Register.jsx";
 import ForgotPassword from "../pages/auth/ForgotPassword.jsx";
 import CompleteProfile from "../pages/auth/CompleteProfile.jsx";
+import VerifyEmail from "../pages/auth/VerifyEmail.jsx";
 
 import Dashboard from "../pages/dashboard/Dashboard.jsx";
 import Profile from "../pages/dashboard/Profile.jsx";
@@ -34,6 +35,7 @@ export default function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/complete-profile" element={<CompleteProfile />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
       </Route>
 
       <Route element={<ProtectedRoute />}>

@@ -3,7 +3,7 @@ import Loader from "../components/common/Loader.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 
 export default function AdminRoute() {
-  const { isAdmin, firebaseUser, profile, authLoading } = useAuth();
+  const { isAdmin, isEmailVerified, firebaseUser, profile, authLoading } = useAuth();
 
   if (authLoading) {
     return <Loader fullScreen label="Checking admin access..." />;
@@ -11,6 +11,10 @@ export default function AdminRoute() {
 
   if (!firebaseUser) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (!isEmailVerified) {
+    return <Navigate to="/verify-email" replace />;
   }
 
   if (!profile?.username) {

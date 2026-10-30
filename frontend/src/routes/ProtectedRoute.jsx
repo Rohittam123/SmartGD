@@ -3,7 +3,7 @@ import Loader from "../components/common/Loader.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 
 export default function ProtectedRoute() {
-  const { isAuthenticated, profile, authLoading } = useAuth();
+  const { isAuthenticated, isEmailVerified, profile, authLoading } = useAuth();
   const location = useLocation();
 
   if (authLoading) {
@@ -12,6 +12,10 @@ export default function ProtectedRoute() {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  if (!isEmailVerified) {
+    return <Navigate to="/verify-email" replace state={{ from: location }} />;
   }
 
   if (!profile?.username) {

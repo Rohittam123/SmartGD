@@ -8,7 +8,7 @@ import { claimUsername } from "../../services/userService.js";
 import { DEFAULT_AVATAR, USER_ROLES } from "../../utils/constants.js";
 
 export default function CompleteProfile() {
-  const { firebaseUser, profile, authLoading } = useAuth();
+  const { firebaseUser, isEmailVerified, profile, authLoading } = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,6 +18,9 @@ export default function CompleteProfile() {
   }
   if (!firebaseUser) {
     return <Navigate to="/login" replace />;
+  }
+  if (!isEmailVerified) {
+    return <Navigate to="/verify-email" replace />;
   }
   if (profile?.username) {
     return <Navigate to="/dashboard" replace />;

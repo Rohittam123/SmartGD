@@ -1,4 +1,4 @@
-import { createContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useEffect, useMemo, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../config/firebase.js";
@@ -8,6 +8,7 @@ export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [firebaseUser, setFirebaseUser] = useState(null);
+  const [emailVerified, setEmailVerified] = useState(false);
   const [profile, setProfile] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -20,6 +21,7 @@ export function AuthProvider({ children }) {
         unsubscribeProfile = null;
       }
       setFirebaseUser(user);
+      setEmailVerified(Boolean(user?.emailVerified));
 
       if (!user) {
         setProfile(null);
@@ -60,15 +62,31 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  const refreshEmailVerification = useCallback(async () => {
+    const user = auth.currentUser;
+    if (!user) {
+      return false;
+    }
+
+    await user.reload();
+    await user.getIdToken(true);
+    const refreshedUser = auth.currentUser;
+    const verified = Boolean(refreshedUser?.emailVerified);
+    setEmailVerified(verified);
+    return verified;
+  }, []);
+
   const value = useMemo(
     () => ({
       firebaseUser,
       profile,
       authLoading,
       isAuthenticated: Boolean(firebaseUser),
+      isEmailVerified: Boolean(firebaseUser && emailVerified),
+      refreshEmailVerification,
       isAdmin: profile?.role === USER_ROLES.ADMIN
     }),
-    [firebaseUser, profile, authLoading]
+    [firebaseUser, profile, authLoading, emailVerified, refreshEmailVerification]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

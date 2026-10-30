@@ -5,11 +5,11 @@ import { listenToUserNotifications } from "../services/notificationService.js";
 export const NotificationContext = createContext(null);
 
 export function NotificationProvider({ children }) {
-  const { firebaseUser } = useAuth();
+  const { firebaseUser, isEmailVerified } = useAuth();
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    if (!firebaseUser) {
+    if (!firebaseUser || !isEmailVerified) {
       setNotifications([]);
       return undefined;
     }
@@ -17,7 +17,7 @@ export function NotificationProvider({ children }) {
     const unsubscribe = listenToUserNotifications(firebaseUser.uid, setNotifications);
 
     return () => unsubscribe();
-  }, [firebaseUser]);
+  }, [firebaseUser, isEmailVerified]);
 
   const unreadCount = notifications.filter((item) => !item.read).length;
 

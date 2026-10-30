@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   deleteUser,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -44,12 +45,35 @@ export async function registerWithEmail({ name, username, email, password, colle
     throw error;
   }
 
+  try {
+    await sendEmailVerification(credential.user, {
+      url: `${window.location.origin}/verify-email`,
+      handleCodeInApp: false
+    });
+  } catch (error) {
+    console.error("Account created, but the verification email could not be sent:", error);
+    throw new Error(
+      "Your account was created, but the verification email could not be sent. Sign in and use the resend option to try again."
+    );
+  }
+
   return credential.user;
 }
 
 export async function loginWithEmail({ email, password }) {
   const credential = await signInWithEmailAndPassword(auth, email, password);
   return credential.user;
+}
+
+export async function resendVerificationEmail(user) {
+  if (!user) {
+    throw new Error("Sign in before requesting a verification email.");
+  }
+
+  await sendEmailVerification(user, {
+    url: `${window.location.origin}/verify-email`,
+    handleCodeInApp: false
+  });
 }
 
 export async function loginWithGoogle() {

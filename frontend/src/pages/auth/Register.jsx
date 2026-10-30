@@ -21,8 +21,8 @@ export default function Register() {
 
     try {
       await registerWithEmail({ name, username, email, password, college });
-      toast.success("Account created successfully.");
-      navigate("/dashboard", { replace: true });
+      toast.success("Account created. Check your email to verify your address.");
+      navigate("/verify-email", { replace: true });
     } catch (error) {
       toast.error(error.message || "Unable to create account.");
     } finally {

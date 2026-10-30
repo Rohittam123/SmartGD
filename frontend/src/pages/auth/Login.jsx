@@ -19,7 +19,13 @@ export default function Login() {
     setLoading(true);
 
     try {
-      await loginWithEmail({ email, password });
+      const user = await loginWithEmail({ email, password });
+      if (!user.emailVerified) {
+        toast.error("Verify your email before continuing.");
+        navigate("/verify-email", { replace: true });
+        return;
+      }
+
       toast.success("Welcome back!");
       navigate(from, { replace: true });
     } catch (error) {

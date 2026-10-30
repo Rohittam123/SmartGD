@@ -12,6 +12,7 @@ service cloud.firestore {
 
     function isSignedIn() {
       return isAuthenticated()
+        && request.auth.token.email_verified == true
         && exists(/databases/$(database)/documents/users/$(request.auth.uid))
         && userDoc().data.username is string
         && exists(/databases/$(database)/documents/usernames/$(userDoc().data.username))
@@ -20,6 +21,10 @@ service cloud.firestore {
 
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isEmailVerified() {
+      return isAuthenticated() && request.auth.token.email_verified == true;
     }
 
     function isAdmin() {
@@ -38,14 +43,33 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read: if isAuthenticated();
+      allow read: if isAuthenticated()
+        && (request.auth.uid == userId || isEmailVerified());
       allow create: if isOwner(userId)
         && request.resource.data.uid == userId
         && validUsername(request.resource.data.username)
+        && (!('role' in request.resource.data) || request.resource.data.role == "user")
         && getAfter(/databases/$(database)/documents/usernames/$(request.resource.data.username)).data.uid == userId;
       allow update: if isAdmin()
         || (
           isOwner(userId)
+          && isEmailVerified()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'username', 'name', 'email', 'college', 'photoURL', 'bio', 'updatedAt',
+            'totalSessions', 'averageScore', 'rank', 'createdAt', 'role', 'uid'
+          ])
+          && request.resource.data.uid == userId
+          && (
+            !('role' in request.resource.data)
+            || (
+              'role' in resource.data
+              && request.resource.data.role == resource.data.role
+            )
+            || (
+              !('role' in resource.data)
+              && request.resource.data.role == "user"
+            )
+          )
           && (
             (
               'username' in resource.data
@@ -114,6 +138,7 @@ service cloud.firestore {
           && request.resource.data.to is string
           && request.resource.data.type is string
           && request.resource.data.payload != null;
+        allow delete: if isAdmin();
       }
 
       match /transcripts/{transcriptId} {

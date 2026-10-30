@@ -1,6 +1,6 @@
 
 import { NavLink } from "react-router-dom";
-import { Compass, Home, Layers, ListChecks, MessageCircle, Search, Sparkles, Trophy, UserCircle2 } from "lucide-react";
+import { Compass, Home, Layers, ListChecks, MessageCircle, Search, ShieldCheck, Sparkles, Trophy, UserCircle2 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth.js";
 
 const links = [
@@ -16,7 +16,10 @@ const links = [
 ];
 
 export default function Sidebar() {
-  const { profile } = useAuth();
+  const { profile, isAdmin } = useAuth();
+  const visibleLinks = isAdmin
+    ? [...links, { label: "Admin", to: "/admin", icon: ShieldCheck }]
+    : links;
 
   return (
     <aside className="min-h-screen border-r border-white/10 bg-slate-950/90 p-6 text-slate-300">
@@ -32,7 +35,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="space-y-2">
-        {links.map((link) => {
+        {visibleLinks.map((link) => {
           const Icon = link.icon;
 
           return (

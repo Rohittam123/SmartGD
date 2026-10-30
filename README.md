@@ -30,6 +30,8 @@ Deploy the Firestore rules before enabling registration or username search:
 firebase deploy --only firestore:rules --project smart-gd-02
 ```
 
+Email/password accounts must verify their email before using protected platform features. Firebase Authentication sends the verification link; configure the email verification template and add your deployed domain to Firebase Authentication's authorized domains. Google sign-in continues to use the provider's verified-email status.
+
 ## Available scripts
 
 - `npm run dev` — start Vite dev server

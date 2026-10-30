@@ -46,6 +46,10 @@ async function verifyAuth(req, res, next) {
     const token = header.replace("Bearer ", "");
     const decoded = await admin.auth().verifyIdToken(token);
 
+    if (!decoded.email_verified) {
+      return res.status(403).json({ message: "Verify your email before accessing this service." });
+    }
+
     const profileSnapshot = await db.collection("users").doc(decoded.uid).get();
     const username = profileSnapshot.data()?.username;
     if (!username) {
