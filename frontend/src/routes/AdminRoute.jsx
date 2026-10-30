@@ -10,11 +10,11 @@ export default function AdminRoute() {
   }
 
   if (!firebaseUser) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/admin/login" replace />;
   }
 
   if (!isEmailVerified) {
-    return <Navigate to="/verify-email" replace />;
+    return <Navigate to="/verify-email" replace state={{ from: { pathname: "/admin" } }} />;
   }
 
   if (!profile?.username) {

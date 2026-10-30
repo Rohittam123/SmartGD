@@ -6,6 +6,7 @@ import AdminRoute from "./AdminRoute.jsx";
 
 import Landing from "../pages/Landing.jsx";
 import Login from "../pages/auth/Login.jsx";
+import AdminLogin from "../pages/auth/AdminLogin.jsx";
 import Register from "../pages/auth/Register.jsx";
 import ForgotPassword from "../pages/auth/ForgotPassword.jsx";
 import CompleteProfile from "../pages/auth/CompleteProfile.jsx";
@@ -32,6 +33,7 @@ export default function AppRoutes() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/complete-profile" element={<CompleteProfile />} />

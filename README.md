@@ -30,7 +30,7 @@ Deploy the Firestore rules before enabling registration or username search:
 firebase deploy --only firestore:rules --project smart-gd-02
 ```
 
-Email/password accounts must verify their email before using protected platform features. Firebase Authentication sends the verification link; configure the email verification template and add your deployed domain to Firebase Authentication's authorized domains. Google sign-in continues to use the provider's verified-email status.
+Email/password users must verify their address before a Smart GD profile or username can be created or protected features can be used. The profile is completed after verification. Firebase Authentication creates a pending, unverified identity so it can send the verification link; that identity has no Smart GD profile or platform access until verification. Configure the email verification template and add your deployed domain to Firebase Authentication's authorized domains. Google sign-in continues to use the provider's verified-email status.
 
 ## Available scripts
 
