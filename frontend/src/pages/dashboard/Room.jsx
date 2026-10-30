@@ -377,6 +377,7 @@ export default function Room() {
 
           <Timer
             minutes={room.timerMinutes}
+            startedAt={room.startedAt}
             status={room.status}
           />
         </div>
